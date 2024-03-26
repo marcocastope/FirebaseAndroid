@@ -22,14 +22,18 @@ class MainActivity : ComponentActivity() {
         authViewModel = AuthViewModel()
         setContent {
             FirebaseYoutubeAndroidTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val currentUser = authViewModel.currentUser.collectAsState()
                     if (currentUser.value != null) {
-                        HomeScreen { authViewModel.logout() }
+                        HomeScreen(
+                            profile = authViewModel.profile,
+                            onLogoutClick = { authViewModel.logout() },
+                            onUpdateProfile = { displayName, photoUrl ->
+                                authViewModel.updateProfileUser(displayName, photoUrl)
+                            })
                     } else {
                         RegisterScreen(
                             onLoginClick = authViewModel::loginUser,
